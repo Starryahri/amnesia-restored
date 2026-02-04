@@ -2,7 +2,7 @@
 
 //Player Marker//
 let playerIcon =  L.icon ({
-  iconUrl: '/scr/images/icon-character-map.png',
+  iconUrl: './scr/images/icon-character-map.png',
   iconSize: [206/4, 181/4],
   popupAnchor: [0, -38],
   iconAnchor: [91/4,167/4],
@@ -70,7 +70,7 @@ L.control.zoom({position: 'bottomright'}).addTo(systemMap);
 
 //POI: Tenement
 let tenementIcon = L.icon ({
-  iconUrl: '/scr/images/icon-tenement-map.png',
+  iconUrl: './scr/images/icon-tenement-map.png',
   iconSize: [164/4, 164/4],
   popupAnchor: [0, -164/8],
   iconAnchor: [164/8 + 1 , 164/8 + 1],
@@ -83,7 +83,7 @@ tenementMarker.on("click", function() {
 
 //POI: Hotel
 let hotelIcon = L.icon ({
-  iconUrl: '/scr/images/icon-tenement-map.png',
+  iconUrl: './scr/images/icon-tenement-map.png',
   iconSize: [164/4, 164/4],
   popupAnchor: [0, -164/8],
   iconAnchor: [164/8 + 1 , 164/8 + 1],
@@ -97,7 +97,7 @@ hotelMarker.on("click", function() {
 
 //POI: Food
 let foodIcon = L.icon ({
-  iconUrl: '/scr/images/icon-food-map.png',
+  iconUrl: './scr/images/icon-food-map.png',
   iconSize: [164/4, 164/4],
   popupAnchor: [0, -164/8],
   iconAnchor: [164/8 + 1 , 164/8 + 1],
@@ -105,7 +105,7 @@ let foodIcon = L.icon ({
 
 //POI: Subways
 let subwayIcon = L.icon ({
-  iconUrl: '/scr/images/icon-subway-map.png',
+  iconUrl: './scr/images/icon-subway-map.png',
   iconSize: [164/4, 164/4],
   popupAnchor: [0, -164/8],
   iconAnchor: [164/8 + 1 , 164/8 + 1],
@@ -113,7 +113,7 @@ let subwayIcon = L.icon ({
 
 //POI: Phone
 let phoneIcon = L.icon ({
-  iconUrl: '/scr/images/icon-phone-map.png',
+  iconUrl: './scr/images/icon-phone-map.png',
   iconSize: [164/4, 164/4],
   popupAnchor: [0, -164/8],
   iconAnchor: [164/8 + 1 , 164/8 + 1],
@@ -121,7 +121,7 @@ let phoneIcon = L.icon ({
 
 //POI: Story Nodes
 let poiIcon = L.icon ({
-  iconUrl: '/scr/images/icon-POI-map.png',
+  iconUrl: './scr/images/icon-POI-map.png',
   iconSize: [164/4, 164/4],
   popupAnchor: [0, -164/8],
   iconAnchor: [164/8 + 1 , 164/8 + 1],

@@ -6,6 +6,7 @@ let f_firstphonecall = false;
 
 let applyInput = (input) => {
   input = input || getInput();
+  input = input.toLowerCase();
   inputs.push(input);
   inputsPos = inputs.length;
   if (input === "inv") {

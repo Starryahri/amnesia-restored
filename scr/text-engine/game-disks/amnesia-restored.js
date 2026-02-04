@@ -49,7 +49,7 @@ const amnesiaRestored = {
         document.getElementById("arrow").innerHTML = "";
         //document.getElementById("inputarrow").disabled = true;
         println("You wake up feeling wonderful.\n ");
-        setTimeout(() => {  println("But also, in some indefinable way, strange\n "); }, 2000);
+        setTimeout(() => {  println("But also, in some indefinable way, strange.\n"); }, 2000);
         setTimeout(() => {  println("Slowly, as you lie there on the cool bedspread, it dawns on you that you have absolutely no idea where you are. A hotel room, by the look of it. But with the curtains drawn, you don't know in what city, or even what country.\n"); }, 4000);
         setTimeout(() => {  pressEnter('amne-intr-1');}, 4100);  
       },
@@ -306,7 +306,7 @@ const amnesiaRestored = {
           icon: 'img/png/image-gideonbible-thumbnail.png',
           gif: 'img/gif/gif-gideonbible-ingame.gif',
           name: ['Gideon Bible', 'bible', 'holy book', 'the bible'],
-          desc: `You open the Bible to the only dog-eared page in the book and you notice that the page so marked has been scribbled on. It is the page on which appropriate texts are cited for those with special needs: For those who mourn; For those in ill health; etc. The list of texts commended to "those in doubt and uncertainty" had been crossed out, and above the deleted citations of chapter and verse someone had written "John I." \n If you remember John 1 rightly, it seems oddly irrelevant to the needs of those in double. But never mind.`,
+          desc: `You open the Bible to the only dog-eared page in the book and you notice that the page so marked has been scribbled on. It is the page on which appropriate texts are cited for those with special needs: For those who mourn; For those in ill health; etc. The list of texts commended to "those in doubt and uncertainty" had been crossed out, and above the deleted citations of chapter and verse someone had written "John I." \n If you remember John 1 rightly, it seems oddly irrelevant to the needs of those in doubt. But never mind.`,
           isTakeable: true,
           onDrop: () => {
             println(`You shouldn't drop that. It might be important.`);
@@ -890,7 +890,7 @@ const amnesiaRestored = {
               icon: 'img/png/image-gideonbible-thumbnail.png',
               gif: 'img/gif/gif-gideonbible-ingame.gif',
               name: ['Gideon Bible', 'bible', 'holy book', 'the bible'],
-              desc: `You open the Bible to the only dog-eared page in the book and you notice that the page so marked has been scribbled on. It is the page on which appropriate texts are cited for those with special needs: For those who mourn; For those in ill health; etc. The list of texts commended to "those in doubt and uncertainty" had been crossed out, and above the deleted citations of chapter and verse someone had written "John I." \n If you remember John 1 rightly, it seems oddly irrelevant to the needs of those in double. But never mind.`,
+              desc: `You open the Bible to the only dog-eared page in the book and you notice that the page so marked has been scribbled on. It is the page on which appropriate texts are cited for those with special needs: For those who mourn; For those in ill health; etc. The list of texts commended to "those in doubt and uncertainty" had been crossed out, and above the deleted citations of chapter and verse someone had written "John I." \n If you remember John 1 rightly, it seems oddly irrelevant to the needs of those in doubt. But never mind.`,
               isTakeable: true,
               isDroppable: true,
               onDrop: () => {

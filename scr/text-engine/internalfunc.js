@@ -317,11 +317,29 @@ let clearOutput = () => {
 // determine whether the object has the passed name
 // item | character, string -> bool
 let objectHasName = (obj, name) => {
+  try {
   const compareNames = n => n.toLowerCase().includes(name.toLowerCase());
 
   return Array.isArray(obj.name)
     ? obj.name.find(compareNames)
     : compareNames(obj.name);
+
+  } catch {
+
+    console.log( "error while checking objectHasName, attempting to bypass..." );
+
+    const compareNames = n => {
+    if (typeof n !== 'string') {
+      n = String(n);      
+    }
+    n.toLowerCase().includes(name.toLowerCase());
+    } 
+
+    return Array.isArray(obj.name)
+    ? obj.name.find(compareNames)
+    : compareNames(obj.name);
+
+  }
 }
 
 // determine whether the object has the passed id

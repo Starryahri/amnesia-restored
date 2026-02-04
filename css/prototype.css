@@ -19,6 +19,7 @@ html {
 
 body {
    background-image: url(../img/png/newyork.png);
+   background-color: black;
 }
 
 #game-container img {

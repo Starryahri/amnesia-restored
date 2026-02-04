@@ -4,11 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project loosely adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] - 2022-01-?? 
+## [Amnesia-v2.5.1] - 2026-02-04 
 ### Added
 
 
 ### Changed
+- Made parser inputs case-insensitive.
+- Significantly increased speed of UI transitions.
+- Fixed map not fully loading on initial open.
+- Fixed missing settings icon on IBM visual mode.
+- Fixed missing icons due to bad image file paths.
+- Black color behind background image fixes inconsistent visuals when overscrolling on some browsers.
+- Fixed broken saves when loading.
+- Fixed "those in double" typo for Gideon Bible.
+- Added period at end of opening line "some indefinable way, strange".
 
 
 ### Removed

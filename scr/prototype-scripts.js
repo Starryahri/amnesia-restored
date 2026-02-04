@@ -512,7 +512,7 @@ let turnOnMap = () => {
     ////console.log(x.style.display);
     if(!x.style.display || x.style.display === "none"){
         fadeOn("map-display");
-        map.invalidateSize();
+        systemMap.invalidateSize();
         mapOn = true;
     } else {
         fadeOff("map-display");
@@ -669,7 +669,7 @@ let displayCheck = (name) => {
     }
 
     if(name === "map"){
-        setTimeout(function(){ map.invalidateSize()}, 50);
+        setTimeout(function(){ systemMap.invalidateSize() }, 50);
         //map.panTo(playerMarker.getLatLng());
         if(invOn === true){
             document.getElementById("inventory-display").style.display = "none";
@@ -1270,10 +1270,10 @@ let fadeOn = (elId) => {
     clearInterval(id);
     id = setInterval(fadeIn, 1);
     function fadeIn(){
-        if(opacNum === 100){
+        if(opacNum >= 100){
             clearInterval(id);
         } else {
-            opacNum++;
+            opacNum+=3;
             el.style.opacity = opacNum + "%";
         }
     }
@@ -1287,11 +1287,11 @@ let fadeOff = (elId) => {
     clearInterval(id);
     id = setInterval(fadeOut, 1);
     function fadeOut(){
-        if(opacNum === 0){
+        if(opacNum <= 0){
             elem.style.display = "none";
             clearInterval(id);
         } else {
-            opacNum--;
+            opacNum-=3;
             elem.style.opacity = opacNum + "%";
         }
     }
@@ -1315,7 +1315,7 @@ let slideLeftIn = (elId, textId) => {
     // sets beginning width
     let width = 0;
     clearInterval(id);
-    id = setInterval(slideInL, 15);
+    id = setInterval(slideInL, 5);
     function slideInL(){
         if(width === 25){
             clearInterval(id);
@@ -1327,7 +1327,7 @@ let slideLeftIn = (elId, textId) => {
                 // sets beginning opacity
                 let opacity = 0;
                 clearInterval(text);
-                text = setInterval(fadeInText, 50);
+                text = setInterval(fadeInText, 30);
                 function fadeInText(){
                     if(opacity >= 1){
                         clearInterval(text);
@@ -1353,7 +1353,7 @@ let slideLeftOut = (elId, textId) => {
     // sets beginning width 
     let width = 25;
     clearInterval(id);
-    id = setInterval(slideOutL, 15);
+    id = setInterval(slideOutL, 5);
     function slideOutL(){
         if(width === 0){
             clearInterval(id);
@@ -1366,7 +1366,7 @@ let slideLeftOut = (elId, textId) => {
                 // sets beginning opacity
                 let opacity = 1;
                 clearInterval(text);
-                text = setInterval(fadeOutText, 50);
+                text = setInterval(fadeOutText, 5);
                 function fadeOutText(){
                     if(opacity <= 0){
                         clearInterval(text);
@@ -1392,7 +1392,7 @@ let slideRightOut = (elId, textId) => {
     // sets beginning width 
     let width = 25;
     clearInterval(id);
-    id = setInterval(slideOutR, 15);
+    id = setInterval(slideOutR, 5);
     function slideOutR(){
         if(width === 0){
             clearInterval(id);
@@ -1405,7 +1405,7 @@ let slideRightOut = (elId, textId) => {
                 // sets beginning opacity
                 let opacity = 1;
                 clearInterval(text);
-                text = setInterval(fadeOutText, 20);
+                text = setInterval(fadeOutText, 5);
                 function fadeOutText(){
                     if(opacity <= 0){
                         clearInterval(text);
@@ -1434,7 +1434,7 @@ let slideRightIn = (elId, textId) => {
     // sets beginning width
     let width = 0;
     clearInterval(id);
-    id = setInterval(slideInR, 15);
+    id = setInterval(slideInR, 5);
     function slideInR(){
         if(width === 25){
             clearInterval(id);
@@ -1446,7 +1446,7 @@ let slideRightIn = (elId, textId) => {
                 // sets beginning opacity
                 let opacity = 0;
                 clearInterval(text);
-                text = setInterval(fadeInText, 50);
+                text = setInterval(fadeInText, 30);
                 function fadeInText(){
                     if(opacity >= 1){
                         clearInterval(text);
@@ -1478,7 +1478,7 @@ let slideInvX = (elId, textId) => {
     // sets beginning width
     let width = 0;
     clearInterval(id);
-    id = setInterval(slideInL, 15);
+    id = setInterval(slideInL, 5);
     function slideInL(){
         if(width === 60){
             clearInterval(id);
@@ -1490,7 +1490,7 @@ let slideInvX = (elId, textId) => {
                 // sets beginning opacity
                 let opacity = 0;
                 clearInterval(text);
-                text = setInterval(fadeInText, 50);
+                text = setInterval(fadeInText, 30);
                 function fadeInText(){
                     if(opacity >= 1){
                         clearInterval(text);
@@ -1522,7 +1522,7 @@ let slideInvItems = (elId) => {
     // sets beginning width
     let width = 0;
     clearInterval(id);
-    id = setInterval(slideInL, 15);
+    id = setInterval(slideInL, 5);
     function slideInL(){
         if(width === 40){
             clearInterval(id);
@@ -1534,7 +1534,7 @@ let slideInvItems = (elId) => {
                 // sets beginning opacity
                 let opacity = 0;
                 clearInterval(text);
-                text = setInterval(fadeInText, 50);
+                text = setInterval(fadeInText, 30);
                 function fadeInText(){
                     if(opacity >= 1){
                         clearInterval(text);
@@ -1566,7 +1566,7 @@ let slideBro = (elId) => {
     // sets beginning width
     let width = 0;
     clearInterval(id);
-    id = setInterval(slideInL, 15);
+    id = setInterval(slideInL, 5);
     function slideInL(){
         if(width === 40){
             clearInterval(id);
@@ -1578,7 +1578,7 @@ let slideBro = (elId) => {
                 // sets beginning opacity
                 let opacity = 0;
                 clearInterval(text);
-                text = setInterval(fadeInText, 50);
+                text = setInterval(fadeInText, 30);
                 function fadeInText(){
                     if(opacity >= 1){
                         clearInterval(text);
@@ -1607,7 +1607,7 @@ let slideBroFull = (elId) => {
     // sets beginning width
     let width = 0;
     clearInterval(id);
-    id = setInterval(slideInL, 15);
+    id = setInterval(slideInL, 5);
     function slideInL(){
         if(width === 35){
             clearInterval(id);
@@ -1619,7 +1619,7 @@ let slideBroFull = (elId) => {
                 // sets beginning opacity
                 let opacity = 0;
                 clearInterval(text);
-                text = setInterval(fadeInText, 50);
+                text = setInterval(fadeInText, 30);
                 function fadeInText(){
                     if(opacity >= 1){
                         clearInterval(text);
