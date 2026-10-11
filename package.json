@@ -1,0 +1,15 @@
+{
+  "name": "amnesia-restored",
+  "private": true,
+  "description": "Amnesia: Restored — browser text adventure",
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "serve:test": "serve . -p 4173"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "serve": "^14.2.4"
+  }
+}
