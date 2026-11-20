@@ -3,6 +3,7 @@
 // accepts optional string input; otherwise grabs it from the input element
 let confirmArray = ['Ok.', 'Got it.', 'Check.', 'If you say so.', 'All right.'];
 let f_firstphonecall = false;
+let prevInput = '';
 
 let applyInput = (input) => {
   input = input || getInput();
@@ -56,28 +57,23 @@ let applyInput = (input) => {
     args = args.filter(arg => arg !== 'a' && arg !== 'an' && arg != 'the');
   }
 
-  const [command, ...arguments] = args;
+  const [command, ...cmdArgs] = args;
   const room = getRoom(disk.roomId);
 
-  if (arguments.length === 1) {
-    exec(commands[1][command], arguments[0]);
-  } else if (command === 'take' && arguments.length) {
-    // support for taking items with spaces in the names
-    // (just tries to match on the first word)
-    takeItem(arguments[0]);
-  } else if (command === 'use' && arguments.length) {
-    // support for using items with spaces in the names
-    // (just tries to match on the first word)
-    useItem(arguments[0]);
-  } else if (arguments.length >= commands.length) {
-    exec(commands[commands.length - 1][command], arguments);
+  if (cmdArgs.length === 1) {
+    exec(commands[1][command], cmdArgs[0]);
+  } else if (command === 'take' && cmdArgs.length) {
+    takeItem(cmdArgs[0]);
+  } else if (command === 'use' && cmdArgs.length) {
+    useItem(cmdArgs[0]);
+  } else if (cmdArgs.length >= commands.length) {
+    exec(commands[commands.length - 1][command], cmdArgs);
   } else if (room.exits && getExitDir(command, room.exits)) {
-    // handle shorthand direction command, e.g. "EAST" instead of "GO EAST"
     goDir(command);
   } else if (disk.conversation && (disk.conversation[command] || conversationIncludesTopic(disk.conversation, command))) {
     talkToOrAboutX('about', command);
   } else {
-    exec(commands[arguments.length][command], arguments);
+    exec(commands[cmdArgs.length][command], cmdArgs);
   }
 
 };

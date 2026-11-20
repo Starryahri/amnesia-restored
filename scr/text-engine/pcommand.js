@@ -36,8 +36,8 @@ let look = () => {
   if (typeof room.onLook === 'function') {
     room.onLook({disk, println});
   }
-  else if (room.desc === '' || "" || ``) {
-    println(`There's nothing interesting here.`)
+  else if (isEmptyRoomDesc(room)) {
+    println(`There's nothing interesting here.`);
   }
   else {
     
@@ -280,7 +280,7 @@ let talkToOrAboutX = (preposition, x) => {
       println(`You need to be in a conversation to talk about something.`);
       return;
     }
-    const character = eval(disk.conversant);
+    const character = disk.conversant;
     if (getCharactersInRoom(room.id).includes(disk.conversant)) {
       const response = x.toLowerCase();
       if (response === 'nothing') {
@@ -754,9 +754,9 @@ let wear = (clothes) => {
     }
   } else if(item.top && item.bottom && playCloth.top.length >= 1 && playCloth.bottom.length >= 1 && playCloth.top[0] !== item.itemId && playCloth.bottom[0] !== item.itemId){
     if(item.itemId === 'tuxedo' && room.lukecall === true){
-      playCloth.top.splice('T-shirt');
-      playCloth.bottom.splice('jeans');
-      playCloth.feet.splice('sneakers');
+      removeClothingFromSlot(playCloth.top, 'T-shirt');
+      removeClothingFromSlot(playCloth.bottom, 'jeans');
+      removeClothingFromSlot(playCloth.feet, 'sneakers');
       playCloth.top.push(item.itemId);
       playCloth.bottom.push(item.itemId);
       println(`You're in such a state of befuddlement that you begin to put on the tuxedo over the clothes you're wearing.
@@ -842,36 +842,36 @@ let remove = (clothes) => {
 */
   
   if(item.top && item.bottom && playCloth.top.length >= 1 && playCloth.bottom.length >= 1){
-    playCloth.top.splice(item.itemId);
-    playCloth.bottom.splice(item.itemId);
+    removeClothingFromSlot(playCloth.top, item.itemId);
+    removeClothingFromSlot(playCloth.bottom, item.itemId);
     println(`You remove the ${clothes}.`);
   } else if(item.top && item.bottom && playCloth.top.length === 0 && playCloth.bottom.length === 0){
     println(`You're not wearing anything.`);
   }
 
   if(item.top && !item.bottom && playCloth.top.length >= 1){
-    playCloth.top.splice(item.itemId);
+    removeClothingFromSlot(playCloth.top, item.itemId);
     println(`You remove the ${clothes} on your torso.`);
   } else if(item.top && !item.bottom && playCloth.top.length === 0){
     println(`You're not wearing anything.`);
   } 
 
   if(item.bottom && !item.top && playCloth.bottom.length >= 1){
-    playCloth.bottom.splice(item.itemId);
+    removeClothingFromSlot(playCloth.bottom, item.itemId);
     println(`You remove the ${clothes} on your legs.`);
   } else if(item.bottom && !item.top && playCloth.bottom.length === 0){
     println(`You're not wearing anything.`);
   } 
 
   if(item.head && playCloth.head.length >= 1){
-    playCloth.head.splice(item.itemId);
+    removeClothingFromSlot(playCloth.head, item.itemId);
     println(`You remove the ${clothes} on your head.`);
   } else if(item.head && playCloth.head.length === 0){
     println(`You're not wearing anything.`);
   } 
 
   if(item.feet && playCloth.feet.length >= 1){
-    playCloth.feet.splice(item.itemId);
+    removeClothingFromSlot(playCloth.feet, item.itemId);
     println(`You remove the ${clothes} on your feet.`);
   } else if(item.feet && playCloth.feet.length === 0){
     println(`You're not wearing anything.`);
@@ -1107,7 +1107,7 @@ const press = (button) => {
   //////console.log("Button Pressed: " + button);
   //////console.log(elevator.exits.length)
   if (elevator.id === 'corridor-elevator') {
-    if (parsedNum !== NaN && parsedNum < elevator.exits.length-1 && parsedNum > -1) {
+    if (!Number.isNaN(parsedNum) && parsedNum < elevator.exits.length-1 && parsedNum > -1) {
       //////console.log("Moving to floor: " + (parsedNum + 1));
       enterRoom(elevator.exits[parsedNum].id);
     } else {
@@ -1300,7 +1300,7 @@ xStreetGoButton.onclick = function () { //set up the function if the submit butt
       //if the distance between player and hotel is greater than or equal to 11 and
       //the room description is empty, aka no place of interest, or restaurant, or phone and
       //if the tenement hasn't already been spawned then
-        if( room.isStreet && count >= 11 && c >= 15 && (room.desc === '' || "" || ``) && !tenementSpawned) { 
+        if( room.isStreet && count >= 11 && c >= 15 && isEmptyRoomDesc(room) && !tenementSpawned) { 
           const chance = Math.floor(Math.random() * 101); //generate random number between 0-100
           if ( chance <= 29 ) { //25% chance of spawning the tenement if the conditions above were met.
               room.exits.push( //push the tenement into the current rooms array of exits
@@ -1509,17 +1509,17 @@ const begLootTable = () => {
   if (difficulty === 'medium'){ // 
     if (chance2 <= 15) { //chance to get nothing
       println(`The person you've asked for money refuses your request with a contemptuous smile.`);
-    } else if (16 <= chance2 <= 70) { //chance to get between 0.25 & 1.25
+    } else if (chance2 >= 16 && chance2 <= 70) { //chance to get between 0.25 & 1.25
       const dollarAmount = Math.floor(Math.random() * ((125 - 25) + 25)) / 100;
       playMon = playMon + dollarAmount;//add amount to player inventory
       println(`You were able to get ${formatter.format(dollarAmount)}`); //tell the player how much they got
       
-    } else if (71 <= chance2 <= 90) { //chance to get between 1.26 & 1.75
+    } else if (chance2 >= 71 && chance2 <= 90) { //chance to get between 1.26 & 1.75
       const dollarAmount = Math.floor(Math.random() * ((175 - 126) + 126)) / 100;
       playMon = playMon + dollarAmount;
       println(`You were able to get ${formatter.format(dollarAmount)}`);
       
-    } else if (91 <= chance2 <= 100) { //chance to get between 1.76-2.00
+    } else if (chance2 >= 91 && chance2 <= 100) { //chance to get between 1.76-2.00
       const dollarAmount = Math.floor(Math.random() * ((200 - 176) + 176)) / 100;
       println(`You were able to get ${formatter.format(dollarAmount)}`);
       playMon = playMon + dollarAmount;
@@ -1527,15 +1527,15 @@ const begLootTable = () => {
     document.getElementById('money').innerHTML = `${formatter.format(playMon)}`;
   
   } else if (difficulty === 'easy') {
-    if (1 <= chance2 <= 55) { //chance to get between 0.25 & 1.25
+    if (chance2 >= 1 && chance2 <= 55) { //chance to get between 0.25 & 1.25
       const dollarAmount = Math.floor(Math.random() * ((125 - 25) + 25)) / 100;
       println(`You were able to get ${formatter.format(dollarAmount)}`);
       playMon = playMon + dollarAmount;
-    } else if (56 <= chance2 <= 85) { //chance to get between 1.26 & 1.75
+    } else if (chance2 >= 56 && chance2 <= 85) { //chance to get between 1.26 & 1.75
       const dollarAmount = Math.floor(Math.random() * ((175 - 126) + 126)) / 100;
       println(`You were able to get ${formatter.format(dollarAmount)}`);
       playMon = playMon + dollarAmount;
-    } else if (86 <= chance2 <= 100) { //chance to get between 1.76-2.00
+    } else if (chance2 >= 86 && chance2 <= 100) { //chance to get between 1.76-2.00
       const dollarAmount = Math.floor(Math.random() * ((200 - 176) + 176)) / 100;
       println(`You were able to get ${formatter.format(dollarAmount)}`);
       playMon = playMon + dollarAmount;
@@ -1545,15 +1545,15 @@ const begLootTable = () => {
   } else if (difficulty === 'hard') {
     if (chance2 <= 20) { //chance to get nothing
       println(`The person you've asked for money refuses your request with a contemptuous smile.`);
-    } else if (21 <= chance2 <= 75) { //chance to get between 0.25 & 1.25
+    } else if (chance2 >= 21 && chance2 <= 75) { //chance to get between 0.25 & 1.25
       const dollarAmount = Math.floor(Math.random() * ((125 - 25) + 25)) / 100;
       println(`You were able to get ${formatter.format(dollarAmount)}`);
       playMon = playMon + dollarAmount;
-    } else if (76 <= chance2 <= 95) { //chance to get between 1.26 & 1.75
+    } else if (chance2 >= 76 && chance2 <= 95) { //chance to get between 1.26 & 1.75
       const dollarAmount = Math.floor(Math.random() * ((175 - 126) + 126)) / 100;
       println(`You were able to get ${formatter.format(dollarAmount)}`);
       playMon = playMon + dollarAmount;
-    } else if (96 <= chance2 <= 100) { //chance to get between 1.76-2.00
+    } else if (chance2 >= 96 && chance2 <= 100) { //chance to get between 1.76-2.00
       const dollarAmount = Math.floor(Math.random() * ((200 - 176) + 176)) / 100;
       println(`You were able to get ${formatter.format(dollarAmount)}`);
       playMon = playMon + dollarAmount;
@@ -1587,7 +1587,7 @@ let dropItem = (itemName) => {
         println(`You dropped the ${getName(item.name)}.`);
       }
     } else {
-      if (typeof itemIndex === 'function') {
+      if (typeof item.onDrop === 'function') {
         item.onDrop({disk, println, room, getRoom, enterRoom, item});
       } else {
         println(item.block || `You can't drop that.`);
@@ -1860,7 +1860,7 @@ const randomEncounter = () => {
   
   const chance = Math.floor(Math.random() * 100) + 1 //roll number between 1-100
   const room = getRoom(disk.roomId); //get the current room
-  if (chance <= 5 && room.desc === '' || "" || ``) { //5% chance and the room description has to be empty
+  if (chance <= 5 && isEmptyRoomDesc(room)) { //5% chance and the room description has to be empty
     const lat = room.coord[0]; //set the latitude to the latitude
     const lng = room.coord[1]; //set the longitude to the longitude
     if ( (zDays >= 1 && zDays <= 5) && (qMeridiem === 1) && (yHours === 6 || yHours === 5) ) { //if the time is during rush hour 
@@ -2049,15 +2049,15 @@ const carWashEncounter = () => {
       if (difficulty === 'medium'){ // 
         if (chance2 <= 15) { //chance to get nothing
           println(`You clean the windshield and the patron driving the car speeds off before handing you any money.`);
-        } else if (16 <= chance2 <= 70) { //chance to get between 0.25 & 1.00
+        } else if (chance2 >= 16 && chance2 <= 70) { //chance to get between 0.25 & 1.00
           const dollarAmount = Math.floor(Math.random() * ((100 - 25) + 25)) / 100;
           println(`You clean the windshield and the driver tips you ${formatter.format(dollarAmount)}.`); //tell the player how much they got
           playMon = playMon + dollarAmount;//add amount to player inventory
-        } else if (71 <= chance2 <= 90) { //chance to get between 1.01 & 1.25
+        } else if (chance2 >= 71 && chance2 <= 90) { //chance to get between 1.01 & 1.25
           const dollarAmount = Math.floor(Math.random() * ((125 - 101) + 101)) / 100;
           println(`You clean the windshield and the driver tips you ${formatter.format(dollarAmount)}.`);
           playMon = playMon + dollarAmount;
-        } else if (91 <= chance2 <= 100) { //chance to get between 1.26-1.50
+        } else if (chance2 >= 91 && chance2 <= 100) { //chance to get between 1.26-1.50
           const dollarAmount = Math.floor(Math.random() * ((150 - 126) + 126)) / 100;
           println(`You clean the windshield and the driver tips you ${formatter.format(dollarAmount)}.`);
           playMon = playMon + dollarAmount;
@@ -2065,15 +2065,15 @@ const carWashEncounter = () => {
         document.getElementById('money').innerHTML = `${formatter.format(playMon)}`;
       
       } else if (difficulty === 'easy') {
-        if (1 <= chance2 <= 55) { //chance to get between 0.25 & 1.25
+        if (chance2 >= 1 && chance2 <= 55) { //chance to get between 0.25 & 1.25
           const dollarAmount = Math.floor(Math.random() * ((125 - 25) + 25)) / 100;
           println(`You clean the windshield and the driver tips you ${formatter.format(dollarAmount)}.`);
           playMon = playMon + dollarAmount;
-        } else if (56 <= chance2 <= 85) { //chance to get between 1.26 & 1.75
+        } else if (chance2 >= 56 && chance2 <= 85) { //chance to get between 1.26 & 1.75
           const dollarAmount = Math.floor(Math.random() * ((175 - 126) + 126)) / 100;
           println(`You clean the windshield and the driver tips you ${formatter.format(dollarAmount)}.`);
           playMon = playMon + dollarAmount;
-        } else if (86 <= chance2 <= 100) { //chance to get between 1.76-2.00
+        } else if (chance2 >= 86 && chance2 <= 100) { //chance to get between 1.76-2.00
           const dollarAmount = Math.floor(Math.random() * ((200 - 176) + 176)) / 100;
           println(`You clean the windshield and the driver tips you ${formatter.format(dollarAmount)}.`);
           playMon = playMon + dollarAmount;
@@ -2083,15 +2083,15 @@ const carWashEncounter = () => {
       } else if (difficulty === 'hard') {
         if (chance2 <= 20) { //chance to get nothing
           println(`You clean the windshield and the patron driving the car speeds off before handing you any money.`);
-        } else if (21 <= chance2 <= 75) { //chance to get between 0.25 & 1.00
+        } else if (chance2 >= 21 && chance2 <= 75) { //chance to get between 0.25 & 1.00
           const dollarAmount = Math.floor(Math.random() * ((100 - 25) + 25)) / 100;
           println(`You clean the windshield and the driver tips you ${formatter.format(dollarAmount)}.`);
           playMon = playMon + dollarAmount;
-        } else if (76 <= chance2 <= 95) { //chance to get between 1.00 & 1.25
+        } else if (chance2 >= 76 && chance2 <= 95) { //chance to get between 1.00 & 1.25
           const dollarAmount = Math.floor(Math.random() * ((125 - 101) + 101)) / 100;
           println(`You clean the windshield and the driver tips you ${formatter.format(dollarAmount)}.`);;
           playMon = playMon + dollarAmount;
-        } else if (96 <= chance2 <= 100) { //chance to get between 1.26-1.50
+        } else if (chance2 >= 96 && chance2 <= 100) { //chance to get between 1.26-1.50
           const dollarAmount = Math.floor(Math.random() * ((150 - 126) + 126)) / 100;
           println(`You clean the windshield and the driver tips you ${formatter.format(dollarAmount)}.`);
           playMon = playMon + dollarAmount;
@@ -2217,7 +2217,7 @@ const carWashEncounter = () => {
           }
         }
 
-      } else if (item && (x != 'car' || x != 'cars')) {
+      } else if (item && x !== 'car' && x !== 'cars') {
         println(`The rag is good for windshields but you feel its rather dirty to clean anything else with it.`)
       } else if (!item) {
         println(`You don't have the supplies to clean anything, let alone that.`)
@@ -2438,10 +2438,18 @@ let commands = [
   // two+ arguments (e.g. "look at key", "talk to mary")
   {
     search: args => goDir(args[1]),
-    look: args => goDir(args[1]),
     go: args => goDir(args[1]),
     walk: args => goDir(args[1]),
-    look: lookAt,
+    look(args) {
+      if (args.length === 1) {
+        const room = getRoom(disk.roomId);
+        if (room.exits && getExitDir(args[0], room.exits)) {
+          goDir(args[0]);
+          return;
+        }
+      }
+      lookAt([null, ...args]);
+    },
     say(args) {
       const str = args.reduce((cur, acc) => cur + ' ' + acc, '');
       sayString(str);
