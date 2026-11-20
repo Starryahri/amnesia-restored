@@ -15,7 +15,6 @@
   <div id="fatigue-bar" style="width: 100%"></div>
   <span id="arrow">&gt;</span>
   <input id="input" type="text" autofocus />
-  <!-- Stubs required by pcommand.js top-level x-indexer wiring -->
   <button id="submitButton" type="button" hidden></button>
   <select id="streetNumber" hidden></select>
   <select id="crossStreet" hidden></select>
@@ -33,8 +32,13 @@
     loadDisk(minimalTestDisk);
     window.__engineTest = {
       applyInput,
+      save,
+      load,
       getOutputText() {
         return document.getElementById('output').innerText;
+      },
+      outputHtml() {
+        return document.getElementById('output').innerHTML;
       },
       clearOutput() {
         document.getElementById('output').innerHTML = '';

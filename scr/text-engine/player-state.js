@@ -9,13 +9,14 @@ const looksLikeFunctionString = (value) => {
   if (typeof value !== 'string') {
     return false;
   }
-  const t = value.trim();
-  return (
-    t.startsWith('function') ||
-    t.startsWith('async function') ||
-    t.startsWith('(') ||
-    /^[a-zA-Z_$][\w$]*\s*=>/.test(t)
-  );
+  const trimmed = value.trim();
+  if (trimmed.startsWith('function') || trimmed.startsWith('async function')) {
+    return true;
+  }
+  if (!trimmed.includes('=>')) {
+    return false;
+  }
+  return trimmed.startsWith('(') || /^[A-Za-z_$][\w$]*\s*=>/.test(trimmed);
 };
 
 const saveJsonReplacer = (key, value) =>
@@ -32,7 +33,7 @@ const saveJsonReviver = (key, value) => {
   }
 };
 
-let isEmptyRoomDesc = (room) => !room || room.desc === '' || room.desc == null;
+let isEmptyRoomDesc = (room) => !room || room.desc == null || room.desc === '';
 
 let escapeHtml = (text) => String(text)
   .replace(/&/g, '&amp;')
@@ -41,11 +42,17 @@ let escapeHtml = (text) => String(text)
   .replace(/"/g, '&quot;');
 
 let removeClothingFromSlot = (slot, itemId) => {
+  if (!Array.isArray(slot)) {
+    return;
+  }
   const idx = slot.indexOf(itemId);
   if (idx !== -1) {
     slot.splice(idx, 1);
   }
 };
+
+let randomDollars = (minCents, maxCents) =>
+  (Math.floor(Math.random() * (maxCents - minCents + 1)) + minCents) / 100;
 
 let collectPlayerState = () => ({
   hairColor,
@@ -178,16 +185,30 @@ let applyPlayerState = (state) => {
   yHours = state.yHours ?? yHours;
   zDays = state.zDays ?? zDays;
   qMeridiem = state.qMeridiem ?? qMeridiem;
-  caughtCoords1 = state.caughtCoords1;
-  caughtCoords2 = state.caughtCoords2;
+  if ('caughtCoords1' in state) {
+    caughtCoords1 = state.caughtCoords1;
+  }
+  if ('caughtCoords2' in state) {
+    caughtCoords2 = state.caughtCoords2;
+  }
   policeCaughtBegging = state.policeCaughtBegging ?? policeCaughtBegging;
   policeCaughtWashing = state.policeCaughtWashing ?? policeCaughtWashing;
   difficulty = state.difficulty ?? difficulty;
-  encounterStreetNumber = state.encounterStreetNumber;
-  encounterStreetName = state.encounterStreetName;
-  encounterAnswer = state.encounterAnswer;
-  xStreetC = state.xStreetC;
-  xStreetD = state.xStreetD;
+  if ('encounterStreetNumber' in state) {
+    encounterStreetNumber = state.encounterStreetNumber;
+  }
+  if ('encounterStreetName' in state) {
+    encounterStreetName = state.encounterStreetName;
+  }
+  if ('encounterAnswer' in state) {
+    encounterAnswer = state.encounterAnswer;
+  }
+  if ('xStreetC' in state) {
+    xStreetC = state.xStreetC;
+  }
+  if ('xStreetD' in state) {
+    xStreetD = state.xStreetD;
+  }
   firstEncounter = state.firstEncounter ?? firstEncounter;
   wackyEncounter = state.wackyEncounter ?? wackyEncounter;
   gottenRag = state.gottenRag ?? gottenRag;
@@ -213,7 +234,7 @@ let applyPlayerState = (state) => {
   elepAchi = state.elepAchi ?? elepAchi;
   f_firstphonecall = state.f_firstphonecall ?? f_firstphonecall;
   prevInput = state.prevInput ?? prevInput;
-  if (state.inputs) {
+  if (Array.isArray(state.inputs)) {
     inputs = state.inputs;
   }
   inputsPos = state.inputsPos ?? inputsPos;
@@ -243,7 +264,9 @@ let applyPlayerState = (state) => {
     updateEndings();
   }
 
-  internalSave();
+  if (typeof internalSave === 'function') {
+    internalSave();
+  }
 };
 
 let buildSavePayload = (diskSnapshot) => ({

@@ -166,7 +166,6 @@ let newGame = () => {
 let loadGame = () => {
     document.getElementById("game-title").style.display = "none";
     document.getElementById("game-load").style.display = "grid";
-
     SAVE_SLOT_KEYS.forEach((key, index) => {
         const label = localStorage.getItem(key) ? key : `${key} (empty)`;
         document.getElementById(`saveSlot${index + 1}`).innerHTML = label;
@@ -345,7 +344,13 @@ let beginGame = (gameData) => {
         return;
     }
 
-    loadGameFromStorage(raw);
+    try {
+        loadGameFromStorage(raw);
+    } catch (error) {
+        println(`That save file could not be read.`);
+        return;
+    }
+
     clearOutput();
     enterRoom(disk.roomId);
     showGamePanel();

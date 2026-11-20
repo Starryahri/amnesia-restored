@@ -63,12 +63,17 @@ let applyInput = (input) => {
   if (cmdArgs.length === 1) {
     exec(commands[1][command], cmdArgs[0]);
   } else if (command === 'take' && cmdArgs.length) {
+    // support for taking items with spaces in the names
+    // (just tries to match on the first word)
     takeItem(cmdArgs[0]);
   } else if (command === 'use' && cmdArgs.length) {
+    // support for using items with spaces in the names
+    // (just tries to match on the first word)
     useItem(cmdArgs[0]);
   } else if (cmdArgs.length >= commands.length) {
     exec(commands[commands.length - 1][command], cmdArgs);
   } else if (room.exits && getExitDir(command, room.exits)) {
+    // handle shorthand direction command, e.g. "EAST" instead of "GO EAST"
     goDir(command);
   } else if (disk.conversation && (disk.conversation[command] || conversationIncludesTopic(disk.conversation, command))) {
     talkToOrAboutX('about', command);

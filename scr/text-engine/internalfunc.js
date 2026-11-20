@@ -7,11 +7,8 @@ let println = (line, className) => {
   }
 
   let str =
-    // if this is an array of lines, pick one at random
     Array.isArray(line) ? pickOne(line)
-    // if this is a method returning a string, evaluate it
     : typeof line  === 'function' ? line()
-    // otherwise, line should be a string
     : line;
 
   const output = document.querySelector('#output');
@@ -35,6 +32,7 @@ let println = (line, className) => {
     str = addStyleTags(str, '~~', 'strike');
   }
 
+  // maintain line breaks
   while (str.includes('\n')) {
     str = str.replace('\n', '<br>');
   }
@@ -317,7 +315,7 @@ let objectHasName = (obj, name) => {
         n = String(n);
       }
       return n.toLowerCase().includes(name.toLowerCase());
-    };
+    }; 
 
     return Array.isArray(obj.name)
     ? obj.name.find(compareNames)
