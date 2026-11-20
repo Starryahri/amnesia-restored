@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Amnesia engine test harness</title>
+</head>
+<body>
+  <div id="output"></div>
+  <div id="inventory"></div>
+  <div id="item-description"></div>
+  <span id="money">$0.00</span>
+  <span id="time">Monday 8:05 AM</span>
+  <h1 id="currroom"></h1>
+  <div id="hunger-bar" style="width: 100%"></div>
+  <div id="fatigue-bar" style="width: 100%"></div>
+  <span id="arrow">&gt;</span>
+  <input id="input" type="text" autofocus />
+  <!-- Stubs required by pcommand.js top-level x-indexer wiring -->
+  <button id="submitButton" type="button" hidden></button>
+  <select id="streetNumber" hidden></select>
+  <select id="crossStreet" hidden></select>
+  <input id="result" type="hidden" />
+
+  <script src="../../scr/jquery/jquery-3.6.0.min.js"></script>
+  <script src="../../scr/text-engine/playercharacter.js"></script>
+  <script src="../../scr/text-engine/parser.js"></script>
+  <script src="../../scr/text-engine/init.js"></script>
+  <script src="../../scr/text-engine/pcommand.js"></script>
+  <script src="../../scr/text-engine/internalfunc.js"></script>
+  <script src="minimal-disk.js"></script>
+  <script>
+    loadDisk(minimalTestDisk);
+    window.__engineTest = {
+      applyInput,
+      getOutputText() {
+        return document.getElementById('output').innerText;
+      },
+      clearOutput() {
+        document.getElementById('output').innerHTML = '';
+      },
+    };
+  </script>
+</body>
+</html>
