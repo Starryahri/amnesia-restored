@@ -820,6 +820,10 @@ let remove = (clothes) => {
   //let room = getRoom(disk.roomId);
   //let item = getItemInRoom(clothes, disk.roomId);
   let item = getItemInInventory(clothes);
+  if (!item) {
+    println(`You don't have that.`);
+    return;
+  }
   //////console.log(item.itemId)
   //dropItem(item.name[0]);
 
@@ -1041,22 +1045,24 @@ let close = (itemToOpen) => {
 
 // read command 
 let read = (item) => {
-  if(getItemInInventory(item)){
-    const invItem = getItemInInventory(item);
-    if(invItem.passage){
+  const invItem = getItemInInventory(item);
+  if (invItem) {
+    if (invItem.passage) {
       println(invItem.passage);
     } else {
-      println(`You can't read that.`)
+      println(`You can't read that.`);
     }
+    return;
   }
+
   const roomItem = getItemInRoom(item, disk.roomId);
-  if(roomItem.passage){
+  if (roomItem && roomItem.passage) {
     println(roomItem.passage);
+    return;
   }
-  if(!roomItem.passage){
-    println(`There's nothing to read.`);
-  }
-}
+
+  println(`There's nothing to read.`);
+};
 
 // map command to bring up the map
 /*let map = () => {
@@ -1306,9 +1312,13 @@ xStreetGoButton.onclick = function () { //set up the function if the submit butt
               tenement.exits[1]= {dir: ['leave', 'south', 'back'], id: room.id};
                //push that rooms id into an exit south of the tenement entrance
               tenementSpawned = true; //set value so that function wont run again
-              room.onEnter = () => {
-                room.onEnter() + (degradation = true);
-              }
+              const priorOnEnter = room.onEnter;
+              room.onEnter = (ctx) => {
+                degradation = true;
+                if (typeof priorOnEnter === 'function') {
+                  priorOnEnter(ctx);
+                }
+              };
               room.desc = `The abandoned tenement is here.`; //tell player the tenement is here
               println(`You see a tenement here. Perhaps this would be a good place to sleep for the night.`);
             }
@@ -1332,6 +1342,15 @@ const askXAboutY = ([x, _, y]) => { //arguments will be xCharacter, 'about', yTo
     talkToOrAboutX('about', y); //execute asking them the thing
   }
 
+};
+
+// one-arg ASKING command (topic keyword during conversation)
+let askTesting = (topic) => {
+  if (typeof topic === 'string' && topic.length) {
+    talkToOrAboutX('about', topic);
+    return;
+  }
+  println(`During a conversation, type a capitalized KEYWORD or ASK about a topic.`);
 };
 
 //passing time function
@@ -1501,7 +1520,7 @@ const begLootTable = () => {
       println(`You were able to get ${formatter.format(dollarAmount)}`);
       
     } else if (91 <= chance2 <= 100) { //chance to get between 1.76-2.00
-      const dollarAmount = Math.Floor(Math.random() * ((200 - 176) + 176)) / 100;
+      const dollarAmount = Math.floor(Math.random() * ((200 - 176) + 176)) / 100;
       println(`You were able to get ${formatter.format(dollarAmount)}`);
       playMon = playMon + dollarAmount;
     }
@@ -1517,7 +1536,7 @@ const begLootTable = () => {
       println(`You were able to get ${formatter.format(dollarAmount)}`);
       playMon = playMon + dollarAmount;
     } else if (86 <= chance2 <= 100) { //chance to get between 1.76-2.00
-      const dollarAmount = Math.Floor(Math.random() * ((200 - 176) + 176)) / 100;
+      const dollarAmount = Math.floor(Math.random() * ((200 - 176) + 176)) / 100;
       println(`You were able to get ${formatter.format(dollarAmount)}`);
       playMon = playMon + dollarAmount;
     }
@@ -1535,7 +1554,7 @@ const begLootTable = () => {
       println(`You were able to get ${formatter.format(dollarAmount)}`);
       playMon = playMon + dollarAmount;
     } else if (96 <= chance2 <= 100) { //chance to get between 1.76-2.00
-      const dollarAmount = Math.Floor(Math.random() * ((200 - 176) + 176)) / 100;
+      const dollarAmount = Math.floor(Math.random() * ((200 - 176) + 176)) / 100;
       println(`You were able to get ${formatter.format(dollarAmount)}`);
       playMon = playMon + dollarAmount;
     }
@@ -2039,7 +2058,7 @@ const carWashEncounter = () => {
           println(`You clean the windshield and the driver tips you ${formatter.format(dollarAmount)}.`);
           playMon = playMon + dollarAmount;
         } else if (91 <= chance2 <= 100) { //chance to get between 1.26-1.50
-          const dollarAmount = Math.Floor(Math.random() * ((150 - 126) + 126)) / 100;
+          const dollarAmount = Math.floor(Math.random() * ((150 - 126) + 126)) / 100;
           println(`You clean the windshield and the driver tips you ${formatter.format(dollarAmount)}.`);
           playMon = playMon + dollarAmount;
         }
@@ -2055,7 +2074,7 @@ const carWashEncounter = () => {
           println(`You clean the windshield and the driver tips you ${formatter.format(dollarAmount)}.`);
           playMon = playMon + dollarAmount;
         } else if (86 <= chance2 <= 100) { //chance to get between 1.76-2.00
-          const dollarAmount = Math.Floor(Math.random() * ((200 - 176) + 176)) / 100;
+          const dollarAmount = Math.floor(Math.random() * ((200 - 176) + 176)) / 100;
           println(`You clean the windshield and the driver tips you ${formatter.format(dollarAmount)}.`);
           playMon = playMon + dollarAmount;
         }
@@ -2073,7 +2092,7 @@ const carWashEncounter = () => {
           println(`You clean the windshield and the driver tips you ${formatter.format(dollarAmount)}.`);;
           playMon = playMon + dollarAmount;
         } else if (96 <= chance2 <= 100) { //chance to get between 1.26-1.50
-          const dollarAmount = Math.Floor(Math.random() * ((150 - 126) + 126)) / 100;
+          const dollarAmount = Math.floor(Math.random() * ((150 - 126) + 126)) / 100;
           println(`You clean the windshield and the driver tips you ${formatter.format(dollarAmount)}.`);
           playMon = playMon + dollarAmount;
         }
