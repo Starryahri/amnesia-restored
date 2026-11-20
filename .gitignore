@@ -386,3 +386,7 @@ MigrationBackup/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+playwright-report/
+test-results/
+blob-report/
