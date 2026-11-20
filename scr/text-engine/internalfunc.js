@@ -6,12 +6,9 @@ let println = (line, className) => {
     return;
   }
 
-  str =
-    // if this is an array of lines, pick one at random
+  let str =
     Array.isArray(line) ? pickOne(line)
-    // if this is a method returning a string, evaluate it
     : typeof line  === 'function' ? line()
-    // otherwise, line should be a string
     : line;
 
   const output = document.querySelector('#output');
@@ -26,8 +23,9 @@ let println = (line, className) => {
     newLine.classList.add('user');
   }
 
-  // support for markdown-like bold, italic, underline & strikethrough tags
-  if (className !== 'img') {
+  if (className === 'playerInput') {
+    str = escapeHtml(str);
+  } else if (className !== 'img') {
     str = addStyleTags(str, '__', 'u');
     str = addStyleTags(str, '**', 'b');
     str = addStyleTags(str, '*', 'i');
@@ -51,12 +49,9 @@ let listX = (iconPath, line, className, idName) => {
     return;
   }
 
-  str =
-    // if this is an array of lines, pick one at random
+  let str =
     Array.isArray(line) ? pickOne(line)
-    // if this is a method returning a string, evaluate it
     : typeof line  === 'function' ? line()
-    // otherwise, line should be a string
     : line;
 
   const output = document.querySelector('#inventory');
@@ -83,12 +78,9 @@ let listBro = (iconPath, line, className, idName) => {
     return;
   }
 
-  str =
-    // if this is an array of lines, pick one at random
+  let str =
     Array.isArray(line) ? pickOne(line)
-    // if this is a method returning a string, evaluate it
     : typeof line  === 'function' ? line()
-    // otherwise, line should be a string
     : line;
 
   const output = document.querySelector('#inventory');
@@ -114,12 +106,9 @@ let listInv = (iconPath, line, className, idName) => {
     return;
   }
 
-  str =
-    // if this is an array of lines, pick one at random
+  let str =
     Array.isArray(line) ? pickOne(line)
-    // if this is a method returning a string, evaluate it
     : typeof line  === 'function' ? line()
-    // otherwise, line should be a string
     : line;
 
   const output = document.querySelector('#inventory');
@@ -145,19 +134,12 @@ let printInvDesc = (line, className) => {
     return;
   }
 
-  str =
-    // if this is an array of lines, pick one at random
+  let str =
     Array.isArray(line) ? pickOne(line)
-    // if this is a method returning a string, evaluate it
     : typeof line  === 'function' ? line()
-    // otherwise, line should be a string
     : line;
 
   const output = document.querySelector('#item-description');
-
-  if (className) {
-    newLine.classList.add(className);
-  }
 
   // support for markdown-like bold, italic, underline & strikethrough tags
   if (className !== 'img') {
@@ -329,11 +311,11 @@ let objectHasName = (obj, name) => {
     console.log( "error while checking objectHasName, attempting to bypass..." );
 
     const compareNames = n => {
-    if (typeof n !== 'string') {
-      n = String(n);      
-    }
-    n.toLowerCase().includes(name.toLowerCase());
-    } 
+      if (typeof n !== 'string') {
+        n = String(n);
+      }
+      return n.toLowerCase().includes(name.toLowerCase());
+    }; 
 
     return Array.isArray(obj.name)
     ? obj.name.find(compareNames)

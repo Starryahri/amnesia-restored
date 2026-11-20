@@ -1314,7 +1314,6 @@ const amnesiaRestored = {
                 disk.inventory.splice(index, 1);
               }
             })
-            disk.inventory.splice()
             pressEnter('lobb-1'); //leads to Lobby node
         }
       },
@@ -4888,11 +4887,11 @@ const amnesiaRestored = {
         reenableInput();
       },
       onBlock: () => {
-        if(prevInput !== 'yes' || prevInput === '') {
-          println(`"That's all right, Mr. Cameron. Whenever you're ready. Just take your time." Half a minute later, he raps again. "How about it, Mr. Cameron. Do you think you can make it back to your room?"`)
-        } else if (prevInput === 'leave' || 'exit') {
+        if (prevInput === 'yes' || prevInput === 'leave' || prevInput === 'exit') {
           println(`"Ah, Mr. Cameron," the masseur says unctuously. "I'm happy to see you on your feet again. But I wouldn't feel right if I let you leave here by yourself. You need to go back to your room and get some rest. Buddy here has your key; and he'll see you to your door." You try to protest, but your words go unheeded.`)
           enterRoom('heal-club27');
+        } else {
+          println(`"That's all right, Mr. Cameron. Whenever you're ready. Just take your time." Half a minute later, he raps again. "How about it, Mr. Cameron. Do you think you can make it back to your room?"`);
         }
       },
       exits: [],
@@ -4996,10 +4995,10 @@ const amnesiaRestored = {
       name: '', // Displayed each time the player enters the room.
       desc: `F. Lee Bailey takes your appeal to the highest court, but always the verdict and the sentence are sustained. At last, the dreaded day is at hand, and you must choose the means of your execution A firing squad or lethal injection—which is it?`, // Displayed when the player first enters the room.
       onBlock: () => {
-        if (prevInput === 'firing squad' || prevInput === 'squad' || prev === 'firing') {
+        if (prevInput === 'firing squad' || prevInput === 'squad' || prevInput === 'firing') {
           DEATH_AND_TEXAS.firingInjection = false;
           enterRoom('deat-f3');
-        } else if (prevInput === 'lethal injection' || prevInput === 'injection' || prev === 'lethal') {
+        } else if (prevInput === 'lethal injection' || prevInput === 'injection' || prevInput === 'lethal') {
           DEATH_AND_TEXAS.firingInjection = true;
           enterRoom('deat-le3');
         } else if (prevInput === 'appeal decision' || prevInput === 'appeal' || prevInput === 'fight' || prevInput === 'fight it' || prevInput === 'resist it' || prevInput === 'resist') {
@@ -5436,7 +5435,7 @@ const amnesiaRestored = {
       reenableInput();
     },
     onBlock : () => {
-      if (prevInput === 'okay' || prevInput === 'go to chapel' || prevInput || 'go to stairs') {
+      if (prevInput === 'okay' || prevInput === 'go to chapel' || prevInput === 'go to stairs') {
         enterRoom('chap-1');
       } else {
         enterRoom('lobb-7');
@@ -5759,7 +5758,7 @@ const amnesiaRestored = {
           enterRoom('chap-11');
         } 
         //Ask Alice about yourself
-        else if (prevInput === 'what about me?' || prevInput === 'What about me?' || prevInput === 'What about me' || prevInput === 'what about me' || prevInput === 'ask about self' || prevInput === 'me' || prevInput === 'myself' || prevInput === 'john' || prevInput === 'who am i?' || 'who am i') {
+        else if (prevInput === 'what about me?' || prevInput === 'What about me?' || prevInput === 'What about me' || prevInput === 'what about me' || prevInput === 'ask about self' || prevInput === 'me' || prevInput === 'myself' || prevInput === 'john' || prevInput === 'who am i?' || prevInput === 'who am i') {
           room.askSelf++;
           ////console.log(room.askSelf);
           switch(room.askSelf) {
@@ -6606,7 +6605,7 @@ onBlock: () => {
                 onBlock: () => {
                     let room = getRoom('lobb-revi-17')
                         if(room.elevatorCount === 0){
-                            if(prevInput === ('press up' || 'press down' || 'down' || 'up' || 'use elevator')){
+                            if (['press up', 'press down', 'down', 'up', 'use elevator'].includes(prevInput)) {
                                 println(`You press the button to call for the elevator, intending to return to your room and enjoy the benefit of a night's rest, or at least of some peace and quiet, but while you wait in the alcove a pair of policemen appear. One of them also presses the button summoning the elevator. The other, meanwhile, regards you curiously. And why shouldn't he? Your clothes would inspire anyone's curiosity. The elevator arrives, and the cops get in. "Going up?" the second cop asks, holding the elevator door open.`);
                                 elevatorCount++;
                                 if(prevInput === 'yes'){
@@ -12369,7 +12368,7 @@ else{
     },
     onBlock: () => 
     {
-      if(prevInput === 'yes' || 'headline'){
+      if (prevInput === 'yes' || prevInput === 'headline') {
           enterRoom('epil-4');
       }else{
           println(`"Darling, you simply have to hear this! It seems that Zane didn't die the moment we left. He managed to record a kind of confession—and he made out a will. I'll just read that part—listen!"`);

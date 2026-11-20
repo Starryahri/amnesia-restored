@@ -166,12 +166,10 @@ let newGame = () => {
 let loadGame = () => {
     document.getElementById("game-title").style.display = "none";
     document.getElementById("game-load").style.display = "grid";
-    console.log("Loading Game");
-
-    for (let i = 0; i < localStorage.length && i < 3; i++) {
-        document.getElementById(`saveSlot${i+1}`).innerHTML = localStorage.key(i);
-    }
-    //other data we would like for each save slot
+    SAVE_SLOT_KEYS.forEach((key, index) => {
+        const label = localStorage.getItem(key) ? key : `${key} (empty)`;
+        document.getElementById(`saveSlot${index + 1}`).innerHTML = label;
+    });
 }
 // back button on load screen
 let mainScreen = () => {
@@ -320,67 +318,51 @@ let visualDesc = (id) => {
     }
 }
 
+let showGamePanel = () => {
+    document.getElementById("game-options").style.display = "none";
+    document.getElementById("game-load").style.display = "none";
+    document.getElementById("game").style.display = "grid";
+};
+
 let beginGame = (gameData) => {
-    //This is where we load in game data and start the game
     if (gameData === undefined) {
         clearOutput();
-        enterRoom("titl-scre")
-        document.getElementById("game-options").style.display = "none";
-        document.getElementById("game-load").style.display = "none";
-        document.getElementById("game").style.display = "grid";
-    } else if ("slot1") {
-        disk = JSON.parse(loadGameData(1), (key, value) => {
-            try {
-              return eval(value);
-            } catch (error) {
-              return value;
-            }
-          });
-        clearOutput();
-        enterRoom(disk.roomId);
-        document.getElementById("game-options").style.display = "none";
-        document.getElementById("game-load").style.display = "none";
-        document.getElementById("game").style.display = "grid";
-    } else if ("slot2") {
-        disk = JSON.parse(loadGameData(2), (key, value) => {
-            try {
-              return eval(value);
-            } catch (error) {
-              return value;
-            }
-          });
-        clearOutput();
-        enterRoom(disk.roomId);
-        
-        document.getElementById("game-options").style.display = "none";
-        document.getElementById("game-load").style.display = "none";
-        document.getElementById("game").style.display = "grid";
-    } else if ("slot3") {
-        disk = JSON.parse(loadGameData(3), (key, value) => {
-            try {
-              return eval(value);
-            } catch (error) {
-              return value;
-            }
-          });
-        clearOutput();
-        enterRoom(disk.roomId);
-        document.getElementById("game-options").style.display = "none";
-        document.getElementById("game-load").style.display = "none";
-        document.getElementById("game").style.display = "grid";
+        enterRoom("titl-scre");
+        showGamePanel();
+        return;
     }
-}
+
+    const slotMap = { slot1: 1, slot2: 2, slot3: 3 };
+    const slot = slotMap[gameData];
+    if (!slot) {
+        return;
+    }
+
+    const raw = loadGameData(slot);
+    if (!raw) {
+        println(`Save file not found.`);
+        return;
+    }
+
+    try {
+        loadGameFromStorage(raw);
+    } catch (error) {
+        println(`That save file could not be read.`);
+        return;
+    }
+
+    clearOutput();
+    enterRoom(disk.roomId);
+    showGamePanel();
+};
 
 let loadGameData = (slot) => {
-    let index = slot - 1;
-    if (index === 0) {
-        return localStorage.getItem(localStorage.key(index));
-    } else if (index === 1) {
-        return localStorage.getItem(localStorage.key(index));
-    } else if (index === 2) {
-        return localStorage.getItem(localStorage.key(index));
+    const index = slot - 1;
+    if (index < 0 || index >= SAVE_SLOT_KEYS.length) {
+        return null;
     }
-}
+    return localStorage.getItem(SAVE_SLOT_KEYS[index]);
+};
 // changing the mode styling through radio buttons
 
 let changeMode = (mode) => {
@@ -563,7 +545,7 @@ let displayRightToggle = (id, name, text) => {
         slideRightOut(id, text);
         if(name === "mode"){
             modeOn = false;
-        } else if(name === achieve){
+        } else if(name === "achieve"){
             achieveOn = false;
         } else {
             helpOn = false;

@@ -154,38 +154,29 @@ let save = () => {
 
 // convert the disk to JSON and store it
 // (optionally accepts a name for the save)
-let cache = new Set();
-let save = (name = 'Amnesia Restored Save') => {
-  let sDisk = disk;
-  if (localStorage.getItem(name)) {
-    localStorage.removeItem(name);
-  }
-  const saveDisk = JSON.stringify(sDisk, (key, value) => {
-    if(typeof value === 'function') {
-        console.log("Function:", key, value.toString());
-        return value.toString();
-    } else {
-        console.log("Value:", key, value);
-        return value;
-    }
-});
+let persistSave = (name) => {
+  const payload = buildSavePayload(disk);
+  localStorage.setItem(name, JSON.stringify(payload, saveJsonReplacer));
+};
 
-  localStorage.setItem(name, saveDisk);
+let save = (name = 'Amnesia Restored Save') => {
+  persistSave(name);
+  const slotIndex = parseInt(saveSlot, 10) - 1;
+  if (slotIndex >= 0 && slotIndex < SAVE_SLOT_KEYS.length) {
+    persistSave(SAVE_SLOT_KEYS[slotIndex]);
+  }
   const line = name.length ? `Game saved as "${name}".` : `Game saved.`;
   println(line);
 };
 
 let autoSave = () => {
-  //////console.log('Saving...');
-  const save = JSON.stringify(disk, (key, value) => typeof value === 'function' ? value.toString() : value);
-  let saveDate = new Date();
-  let saveFileTime = `Autosave: ${saveDate.getFullYear()}-${saveDate.getMonth()}-${saveDate.getDate()} ${saveDate.getHours()}:${saveDate.getMinutes()}`
-  localStorage.setItem(saveFileTime, save);
-}
+  const saveDate = new Date();
+  const month = saveDate.getMonth() + 1;
+  const saveFileTime = `Autosave: ${saveDate.getFullYear()}-${month}-${saveDate.getDate()} ${saveDate.getHours()}:${saveDate.getMinutes()}`;
+  persistSave(saveFileTime);
+};
 
-// restore the disk from storage
-// (optionally accepts a name for the save)
-let load = (name = "Amnesia Restored Save") => {
+let load = (name = 'Amnesia Restored Save') => {
   const save = localStorage.getItem(name);
 
   if (!save) {
@@ -193,13 +184,7 @@ let load = (name = "Amnesia Restored Save") => {
     return;
   }
 
-  disk = JSON.parse(save, (key, value) => {
-    try {
-      return eval(value);
-    } catch (error) {
-      return value;
-    }
-  });
+  loadGameFromStorage(save);
 
   const line = name.length ? `Game "${name}" was loaded.` : `Game loaded.`;
   println(line);
